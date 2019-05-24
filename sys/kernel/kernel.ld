@@ -14,30 +14,48 @@ SECTIONS
 	   early in the image or the bootloader won't recognize the file format.
 	   Next we'll put the .text section. */
 	.text BLOCK(4K) : ALIGN(4K)
-	{
-		*(.multiboot)
-		*(.text)
-	}
+    {
+        *(.multiboot)
+        *(.text)
+    }
  
 	/* Read-only data. */
-	.rodata BLOCK(4K) : ALIGN(4K)
-	{
-		*(.rodata)
-	}
+    .rodata BLOCK(4K) : ALIGN(4K)
+    {
+        *(.rodata)
+    }
  
 	/* Read-write data (initialized) */
 	.data BLOCK(4K) : ALIGN(4K)
-	{
-		*(.data)
-	}
+    {
+        *(.data)
+    }
  
 	/* Read-write data (uninitialized) and stack */
 	.bss BLOCK(4K) : ALIGN(4K)
-	{
-		*(COMMON)
-		*(.bss)
-	}
- 
+    {
+        *(COMMON)
+        *(.bss)
+    }
+ 	
+ 	/* Include the list of initialization functions sorted. */
+    .init_array :
+    {
+        crti.o(.init_array)
+        KEEP (*(SORT(EXCLUDE_FILE(crti.o crtn.o) .init_array.*)))
+        KEEP (*(EXCLUDE_FILE(crti.o crtn.o) .init_array))
+        crtn.o(.init_array)
+    }
+
+    /* Include the list of termination functions sorted. */
+    .fini_array :
+    {
+        crti.o(.fini_array)
+        KEEP (*(SORT(EXCLUDE_FILE(crti.o crtn.o) .fini_array.*)))
+        KEEP (*(EXCLUDE_FILE(crti.o crtn.o) .fini_array))
+        crtn.o(.fini_array)
+    }
+ 	
 	/* The compiler may produce other sections, by default it will put them in
 	   a segment with the same name. Simply add stuff here as needed. */
 }

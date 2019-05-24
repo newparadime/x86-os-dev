@@ -1,5 +1,5 @@
 %.o: %.c
-	$(TARGET)-$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 	
 %.o: %.cxx
-	$(TARGET)-$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
