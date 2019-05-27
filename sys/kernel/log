@@ -1,0 +1,96 @@
+i686-elf-g++ -std=gnu++17 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -I../../sys/kernel/include -c console-vga-text.cxx -o console-vga-text.o
+In file included from console-vga-text.cxx:4:
+../../sys/kernel/include/console-vga-text.hxx:54:8: error: expected unqualified-id before string constant
+   54 | extern "C"
+      |        ^~~
+console-vga-text.cxx: In member function 'void Terminal::Scroll(int)':
+console-vga-text.cxx:52:34: error: 'terminal_color' was not declared in this scope
+   52 |    buffer[index] = VgaEntry(' ', terminal_color);
+      |                                  ^~~~~~~~~~~~~~
+console-vga-text.cxx: At global scope:
+console-vga-text.cxx:57:6: error: no declaration matches 'void Terminal::PutEntryAt(char, size_t, size_t)'
+   57 | void Terminal::PutEntryAt(char c, size_t x, size_t y)
+      |      ^~~~~~~~
+In file included from console-vga-text.cxx:4:
+../../sys/kernel/include/console-vga-text.hxx:45:10: note: candidate is: 'void Terminal::PutEntryAt(char, uint8_t, size_t, size_t)'
+   45 |     void PutEntryAt(char c, uint8_t color, size_t x, size_t y);
+      |          ^~~~~~~~~~
+../../sys/kernel/include/console-vga-text.hxx:26:7: note: 'class Terminal' defined here
+   26 | class Terminal
+      |       ^~~~~~~~
+console-vga-text.cxx: In member function 'void Terminal::PutChar(char)':
+console-vga-text.cxx:67:17: error: 'column' was not declared in this scope; did you mean 'collumn'?
+   67 |   PutEntryAt(c, column, row);
+      |                 ^~~~~~
+      |                 collumn
+console-vga-text.cxx:69:8: error: 'column' was not declared in this scope; did you mean 'collumn'?
+   69 |  if (++column == VGA_WIDTH || c == '\n')
+      |        ^~~~~~
+      |        collumn
+console-vga-text.cxx: In member function 'void Terminal::WriteString(const char*)':
+console-vga-text.cxx:90:8: error: 'data' was not declared in this scope
+   90 |  Write(data, strlen(data));
+      |        ^~~~
+console-vga-text.cxx:88:40: warning: unused parameter 'str' [-Wunused-parameter]
+   88 | void Terminal::WriteString(const char* str)
+      |                            ~~~~~~~~~~~~^~~
+console-vga-text.cxx: At global scope:
+console-vga-text.cxx:93:1: error: 'terminal_t' does not name a type; did you mean 'Terminal'?
+   93 | terminal_t terminal_create(enum vga_color fg, enum vga_color bg)
+      | ^~~~~~~~~~
+      | Terminal
+console-vga-text.cxx:98:23: error: variable or field 'terminal_destroy' declared void
+   98 | void terminal_destroy(terminal_t void_ptr)
+      |                       ^~~~~~~~~~
+console-vga-text.cxx:98:23: error: 'terminal_t' was not declared in this scope; did you mean 'Terminal'?
+   98 | void terminal_destroy(terminal_t void_ptr)
+      |                       ^~~~~~~~~~
+      |                       Terminal
+console-vga-text.cxx:104:25: error: variable or field 'terminal_set_color' declared void
+  104 | void terminal_set_color(terminal_t self,
+      |                         ^~~~~~~~~~
+console-vga-text.cxx:104:25: error: 'terminal_t' was not declared in this scope; did you mean 'Terminal'?
+  104 | void terminal_set_color(terminal_t self,
+      |                         ^~~~~~~~~~
+      |                         Terminal
+console-vga-text.cxx:105:25: error: expected primary-expression before 'enum'
+  105 |                         enum vga_color fg,
+      |                         ^~~~
+console-vga-text.cxx:106:25: error: expected primary-expression before 'enum'
+  106 |                         enum vga_color bg)
+      |                         ^~~~
+console-vga-text.cxx:112:23: error: variable or field 'terminal_putchar' declared void
+  112 | void terminal_putchar(terminal_t self, char c)
+      |                       ^~~~~~~~~~
+console-vga-text.cxx:112:23: error: 'terminal_t' was not declared in this scope; did you mean 'Terminal'?
+  112 | void terminal_putchar(terminal_t self, char c)
+      |                       ^~~~~~~~~~
+      |                       Terminal
+console-vga-text.cxx:112:40: error: expected primary-expression before 'char'
+  112 | void terminal_putchar(terminal_t self, char c)
+      |                                        ^~~~
+console-vga-text.cxx:118:21: error: variable or field 'terminal_write' declared void
+  118 | void terminal_write(terminal_t self, const char* data, size_t size)
+      |                     ^~~~~~~~~~
+console-vga-text.cxx:118:21: error: 'terminal_t' was not declared in this scope; did you mean 'Terminal'?
+  118 | void terminal_write(terminal_t self, const char* data, size_t size)
+      |                     ^~~~~~~~~~
+      |                     Terminal
+console-vga-text.cxx:118:38: error: expected primary-expression before 'const'
+  118 | void terminal_write(terminal_t self, const char* data, size_t size)
+      |                                      ^~~~~
+console-vga-text.cxx:118:63: error: expected primary-expression before 'size'
+  118 | void terminal_write(terminal_t self, const char* data, size_t size)
+      |                                                               ^~~~
+console-vga-text.cxx:124:27: error: variable or field 'terminal_writestring' declared void
+  124 | void terminal_writestring(terminal_t self, const char* str)
+      |                           ^~~~~~~~~~
+console-vga-text.cxx:124:27: error: 'terminal_t' was not declared in this scope; did you mean 'Terminal'?
+  124 | void terminal_writestring(terminal_t self, const char* str)
+      |                           ^~~~~~~~~~
+      |                           Terminal
+console-vga-text.cxx:124:44: error: expected primary-expression before 'const'
+  124 | void terminal_writestring(terminal_t self, const char* str)
+      |                                            ^~~~~
+rules.mk:5: recipe for target 'console-vga-text.o' failed
+make: *** [console-vga-text.o] Error 1

@@ -1,9 +1,14 @@
+#include "multiboot.h"
+#define STACK_SIZE 0x4000 /* 16 KiB */
+
+#define VIDEO_PX_WIDTH  1024
+#define VIDEO_PX_HEIGHT 768
+#define VIDEO_BIT_DEPTH 32
+ 
 /* Declare constants for the multiboot header. */
-.set ALIGN,    1<<0             /* align loaded modules on page boundaries */
-.set MEMINFO,  1<<1             /* provide memory map */
-.set FLAGS,    ALIGN | MEMINFO  /* this is the Multiboot 'flag' field */
-.set MAGIC,    0x1BADB002       /* 'magic number' lets bootloader find the header */
-.set CHECKSUM, -(MAGIC + FLAGS) /* checksum of above, to prove we are multiboot */
+.set FLAGS,    MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO | MULTIBOOT_VIDEO_MODE   /* the flags for the multiboot header. */
+.set MAGIC,    MULTIBOOT_HEADER_MAGIC /* 'magic number' lets bootloader find the header */
+.set CHECKSUM, -(MAGIC + FLAGS)       /* checksum of above, to prove we are multiboot */
  
 /* 
 Declare a multiboot header that marks the program as a kernel. These are magic
@@ -13,11 +18,20 @@ search for this signature in the first 8 KiB of the kernel file, aligned at a
 forced to be within the first 8 KiB of the kernel file.
 */
 .section .multiboot
-.align 4
+.align MULTIBOOT_INFO_ALIGN
 .long MAGIC
 .long FLAGS
 .long CHECKSUM
- 
+.long 0
+.long 0
+.long 0
+.long 0
+.long 0
+.long 0
+.long VIDEO_PX_WIDTH
+.long VIDEO_PX_HEIGHT
+.long VIDEO_BIT_DEPTH
+
 /*
 The multiboot standard does not define the value of the stack pointer register
 (esp) and it is up to the kernel to provide a stack. This allocates room for a
@@ -31,9 +45,9 @@ stack is properly aligned and failure to align the stack will result in
 undefined behavior.
 */
 .section .bss
-.align 16
+.align MULTIBOOT_STACK_ALIGN
 stack_bottom:
-.skip 16384 # 16 KiB
+.skip STACK_SIZE
 stack_top:
  
 /*
@@ -75,6 +89,10 @@ _start:
 	C++ features such as global constructors and exceptions will require
 	runtime support to work as well.
 	*/
+	push $0
+	popf
+	pushl %ebx
+	pushl %eax
  
 	/*
 	Enter the high-level kernel. The ABI requires the stack is 16-byte
